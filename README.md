@@ -1,5 +1,7 @@
 # selva! Estação
 
+Monitoramento automatizado de fauna com Arduino, TV box e inteligência artificial.
+
 Projeto do IFCiência (IFSP Salto). Um comedouro com Arduino, balança e webcam
 que percebe quando um bicho pousa, tira foto, pergunta pra IA que espécie é e
 registra a visita num app. A ideia veio do selva!, um app de guia de fauna
