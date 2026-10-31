@@ -1,0 +1,27 @@
+# dependencias e builds
+node_modules/
+app/dist/
+app/dist-log.txt
+
+# dados da estacao (visitas, fotos, chave da IA, token, eventos)
+estacao/dados/
+
+# config local do exe (token de admin)
+selva.config.json
+
+# rascunhos de design
+app/ui/mockups/
+
+# sketches de diagnostico da bancada (ficam so o firmware e a balanca ao vivo)
+firmware/diag_ativo/
+firmware/diag_hx711/
+firmware/diag_ponte/
+firmware/ohmimetro/
+firmware/teste_balanca/
+firmware/voltimetro/
+
+# arquivos temporarios
+*.log
+*.tgz
+Thumbs.db
+.DS_Store
