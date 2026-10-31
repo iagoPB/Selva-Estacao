@@ -1,0 +1,16 @@
+{
+  "name": "selva-estacao",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Serviço da estação selva! - coleta, banco e API",
+  "main": "servidor.js",
+  "scripts": {
+    "start": "node servidor.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "serialport": "^13.0.0",
+    "web-push": "^3.6.7",
+    "ws": "^8.18.0"
+  }
+}
