@@ -1,0 +1,45 @@
+{
+  "name": "selva-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "selva! - monitoramento de fauna (IFSP Salto)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "br.ifsp.salto.selva",
+    "productName": "selva",
+    "files": [
+      "main.js",
+      "ui/**",
+      "build/icon.png",
+      "!ui/mockups/**"
+    ],
+    "extraResources": [
+      {
+        "from": "../estacao",
+        "to": "estacao",
+        "filter": [
+          "**/*",
+          "!dados/**"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "selva-${version}.exe"
+    }
+  }
+}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1F3B2A">
+  <title>selva!</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icones/icone-192.png">
+  <link rel="apple-touch-icon" href="icones/icone-apple-180.png">
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <!-- ilustrações de linha do canto das seções e a pata que entra no lugar da foto -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="ilu-pena" viewBox="0 0 64 64">
+      <path d="M12 54 C 22 40, 34 24, 52 10"/>
+      <path d="M52 10 C 46 8, 32 12, 24 26 C 18 36, 15 46, 12 54 C 22 52, 32 46, 38 38 C 46 28, 52 18, 52 10 Z"/>
+      <path d="M22 44 l9 -7 M18 50 l8 -6 M27 36 l9 -8 M33 29 l8 -7"/>
+    </symbol>
+    <symbol id="ilu-folha" viewBox="0 0 64 64">
+      <path d="M10 54 C 10 30, 28 12, 56 10 C 56 36, 38 54, 10 54 Z"/>
+      <path d="M10 54 C 22 42, 38 28, 56 10"/>
+      <path d="M18 46 l12 -4 M26 38 l12 -4 M34 30 l12 -4 M22 42 l-2 -10 M30 34 l-2 -10 M38 26 l-2 -9"/>
+    </symbol>
+    <symbol id="ilu-rastro" viewBox="0 0 64 64">
+      <path d="M32 44 V12 M32 44 L12 26 M32 44 L52 26 M32 44 L32 56 M12 26 l-3 3 M52 26 l3 3 M32 12 l-3 -3 M32 12 l3 -3"/>
+    </symbol>
+    <symbol id="sil-pata" viewBox="0 0 64 64">
+      <ellipse cx="20" cy="22" rx="5" ry="7" transform="rotate(-15 20 22)"/>
+      <ellipse cx="32" cy="16" rx="5" ry="7"/>
+      <ellipse cx="44" cy="22" rx="5" ry="7" transform="rotate(15 44 22)"/>
+      <ellipse cx="12" cy="36" rx="4" ry="5.5" transform="rotate(-30 12 36)"/>
+      <ellipse cx="52" cy="36" rx="4" ry="5.5" transform="rotate(30 52 36)"/>
+      <path d="M32 30 C 22 30, 16 40, 20 48 C 23 54, 28 56, 32 56 C 36 56, 41 54, 44 48 C 48 40, 42 30, 32 30 Z"/>
+    </symbol>
+  </svg>
+
+  <header class="topo">
+    <div class="topoMiolo">
+      <div class="etiqueta">
+        <span class="marca">selva<b>!</b></span>
+        <span class="etiquetaSub">caderno de campo · IFSP Salto</span>
+      </div>
+
+      <nav class="navegacao" role="tablist">
+        <button class="navBotao ativo" data-vista="painel">Painel</button>
+        <button class="navBotao" data-vista="guia">Guia de espécies</button>
+        <!-- escondidos até verificarAcesso() dizer que é admin -->
+        <button class="navBotao" data-vista="lab" hidden>Laboratório</button>
+        <button class="navBotao" data-vista="registro" hidden>Registro</button>
+      </nav>
+
+      <div class="topoDireita">
+        <button class="sino" id="btnSino" hidden title="Notificações">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1Z"/></svg>
+          <span id="sinoTexto">avisar</span>
+        </button>
+        <div class="status" id="status">
+          <span class="ponto"></span><span id="statusTexto">conectando…</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="pagina" id="vistaPainel">
+    <header class="abertura">
+      <p class="kicker">Painel · <span id="dataHoje"></span></p>
+      <h1>Visitas de hoje</h1>
+      <p class="linhaFina">selva! - Comedouro da Vida Silvestre</p>
+    </header>
+
+    <section class="tiles" aria-label="Resumo">
+      <div class="tile"><b class="num" id="tTotal">-</b><span class="rotulo">visitas no total</span></div>
+      <div class="tile"><b class="num" id="tHoje">-</b><span class="rotulo">visitas hoje</span></div>
+      <div class="tile"><b class="num" id="tEspecies">-</b><span class="rotulo">espécies avistadas</span></div>
+      <div class="tile">
+        <b class="num tempo" id="tUltima">-</b>
+        <span class="rotulo">última visita</span>
+        <span class="quem" id="tUltimaQuem"></span>
+      </div>
+      <!-- por último pra não estragar o :first-child dos tiles -->
+      <svg class="ilu" aria-hidden="true"><use href="#ilu-rastro"/></svg>
+    </section>
+
+    <main class="grade">
+      <section class="secao feedSecao">
+        <svg class="ilu" aria-hidden="true"><use href="#ilu-pena"/></svg>
+        <h2>Diário de visitas <small>mais recente primeiro</small></h2>
+        <ol class="diario" id="feed"></ol>
+      </section>
+
+      <aside class="lateral">
+        <section class="secao">
+          <svg class="ilu" aria-hidden="true"><use href="#ilu-folha"/></svg>
+          <h2>Atividade por hora <small id="gHorasSub">todas as visitas</small></h2>
+          <div class="graficoHoras" id="gHoras"></div>
+          <div class="eixoHoras"><span>0h</span><span>6h</span><span>12h</span><span>18h</span><span>23h</span></div>
+        </section>
+
+        <section class="secao">
+          <svg class="ilu" aria-hidden="true"><use href="#sil-pata"/></svg>
+          <h2>Contagem por espécie <small>desde o início</small></h2>
+          <div class="rank" id="gEspecies"></div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="pe"><span>selva! caderno de campo</span><span>pág. 1</span></footer>
+  </div>
+
+  <div class="pagina" id="vistaGuia" hidden>
+    <header class="abertura">
+      <p class="kicker">Guia de espécies</p>
+      <h1>Quem já passou por aqui</h1>
+      <p class="linhaFina" id="guiaSub">sem dados ainda</p>
+    </header>
+    <div class="cartoes" id="guiaGrade"></div>
+    <footer class="pe"><span>selva! caderno de campo</span><span>pág. 2</span></footer>
+  </div>
+
+  <div class="pagina" id="vistaLab" hidden>
+    <header class="abertura">
+      <p class="kicker">Laboratório</p>
+      <h1>Bancada da estação</h1>
+      <p class="linhaFina">Chave da IA, disparo de teste da câmera, identificação por foto e estação virtual.</p>
+    </header>
+
+    <section class="iaBarra">
+      <div id="iaEstado"></div>
+      <label class="labToggle"><input type="checkbox" id="chkSim"> simulador de visitas</label>
+    </section>
+
+    <section class="secao disparoPainel">
+      <h2>Câmera da estação</h2>
+      <p class="labDica">Quando o PIR ou a balança disparam, a câmera tira 3 fotos e a IA decide: sem animal, as fotos são descartadas. Este botão faz um disparo de teste agora.</p>
+      <div class="labLinha">
+        <button class="botao" id="btnDisparo">Disparar câmera</button>
+        <span class="labInfo" id="infoDisparo"></span>
+      </div>
+      <p class="dados disparoNumeros" id="disparoNumeros"></p>
+    </section>
+
+    <div class="labGrade">
+      <section class="secao">
+        <h2>Teste de identificação</h2>
+        <p class="labDica">Arraste uma foto de animal (ou clique para escolher) e veja o palpite da IA, sem registrar visita.</p>
+        <label class="soltar" id="soltar">
+          <input type="file" id="arquivoFoto" accept="image/*" hidden>
+          <span id="soltarTexto">solte a foto aqui ou clique</span>
+          <img id="previa" alt="" hidden>
+        </label>
+        <button class="botao" id="btnIdentificar" disabled>Identificar espécie</button>
+        <div id="resultadoIa" class="resultadoIa" hidden></div>
+      </section>
+
+      <section class="secao">
+        <h2>Estação virtual <small>webcam</small></h2>
+        <p class="labDica">Transforma a webcam em sensor: ao detectar movimento, fotografa, identifica e publica no diário como visita real.</p>
+        <div class="videoQuadro" id="videoQuadro">
+          <video id="video" playsinline muted></video>
+          <span class="videoVazio" id="videoVazio">câmera desligada</span>
+          <div class="videoRotulo" id="videoRotulo" hidden></div>
+        </div>
+        <div class="medidor" id="medidorTrilho"><div class="medidorBarra" id="medidor"></div></div>
+        <div class="labLinha">
+          <button class="botao" id="btnCamera">Ligar câmera</button>
+          <span class="labInfo" id="infoVirtual"></span>
+        </div>
+      </section>
+    </div>
+
+    <footer class="pe"><span>selva! caderno de campo</span><span>pág. 3</span></footer>
+  </div>
+
+  <div class="pagina" id="vistaRegistro" hidden>
+    <header class="abertura">
+      <p class="kicker">Registro</p>
+      <h1>Registro da estação</h1>
+      <p class="linhaFina">o que a estação fez, passo a passo</p>
+    </header>
+
+    <!-- tempos do último disparo e média dos últimos 10 -->
+    <section class="tiles regTiles" aria-label="Tempos do disparo">
+      <div class="tile">
+        <b class="num tempo" id="rTotal">-</b>
+        <span class="rotulo">último disparo</span>
+        <span class="quem" id="rTotalQuem"></span>
+      </div>
+      <div class="tile"><b class="num tempo" id="rCamera">-</b><span class="rotulo">câmera</span></div>
+      <div class="tile"><b class="num tempo" id="rIa">-</b><span class="rotulo">IA</span></div>
+      <div class="tile">
+        <b class="num tempo" id="rMedia">-</b>
+        <span class="rotulo">média de 10 com câmera e IA</span>
+        <span class="quem" id="rMediaQuem"></span>
+      </div>
+    </section>
+
+    <section class="secao">
+      <svg class="ilu" aria-hidden="true"><use href="#ilu-rastro"/></svg>
+      <h2>Passo a passo <small id="regSub">mais recente primeiro</small></h2>
+      <ol class="registro" id="registro"></ol>
+    </section>
+
+    <footer class="pe"><span>selva! caderno de campo</span><span>pág. 4</span></footer>
+  </div>
+
+  <div class="fichaFundo" id="fichaFundo" hidden>
+    <div class="ficha" role="dialog" aria-modal="true">
+      <button class="fichaFechar" id="fichaFechar" aria-label="Fechar">×</button>
+      <div class="fichaTopo">
+        <div class="fichaFoto" id="fichaFoto"></div>
+        <div class="fichaTitulos">
+          <h3 id="fichaNome"></h3>
+          <p class="fichaCientifico" id="fichaCientifico"></p>
+          <p class="dados fichaStats" id="fichaStats"></p>
+        </div>
+      </div>
+
+      <div class="abas" role="tablist">
+        <button class="aba ativa" data-aba="info" role="tab">Informações</button>
+        <button class="aba" data-aba="curiosidades" role="tab">Mitos e curiosidades</button>
+        <button class="aba" data-aba="fotos" role="tab">Fotos</button>
+      </div>
+
+      <div class="abaPainel" id="aba-info">
+        <p id="fichaSobre" class="fichaSobre"></p>
+        <p class="fichaFonte" id="fichaFonte"></p>
+      </div>
+
+      <div class="abaPainel" id="aba-curiosidades" hidden>
+        <ul class="curiosidades" id="curiosidades"></ul>
+      </div>
+
+      <div class="abaPainel" id="aba-fotos" hidden>
+        <div class="galeria" id="galeria"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tooltip" id="tooltip" hidden></div>
+  <div class="brinde" id="brinde" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
